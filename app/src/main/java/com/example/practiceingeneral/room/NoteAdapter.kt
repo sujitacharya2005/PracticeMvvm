@@ -4,19 +4,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.practiceingeneral.R
 
-class NoteAdapter : Adapter<NoteAdapter.NoteHolder>() {
+class NoteAdapter : ListAdapter<Note, NoteAdapter.NoteHolder>(DIFF_CALLBACK) {
     private var onItemClickListener:OnItemClickListener?= null
-    private var notes = ArrayList<Note>()
-    fun setNotes(notes1: ArrayList<Note>) {
-        notes = notes1
-        notifyDataSetChanged()
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Note>(){
+            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
+                return oldItem.title == newItem.title
+                        && oldItem.description == newItem.description
+                        && oldItem.priority == newItem.priority
+            }
+
+        }
     }
 
-    fun getNoteAt(position: Int) = notes[position]
+    fun getNoteAt(position: Int) = getItem(position)
 
     inner class NoteHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textViewTitle : TextView
@@ -31,7 +42,7 @@ class NoteAdapter : Adapter<NoteAdapter.NoteHolder>() {
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION)
-                    onItemClickListener?.onItemClick(notes[position])
+                    onItemClickListener?.onItemClick(getItem(position))
             }
         }
 
@@ -44,13 +55,9 @@ class NoteAdapter : Adapter<NoteAdapter.NoteHolder>() {
         return NoteHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return notes.size
-    }
-
 
     override fun onBindViewHolder(holder: NoteHolder, position: Int) {
-        val currentNote = notes[position]
+        val currentNote = getItem(position)
         holder.textViewTitle.text = currentNote.title
         holder.textViewDescription.text = currentNote.description
         holder.textViewPriority.text = currentNote.priority.toString()

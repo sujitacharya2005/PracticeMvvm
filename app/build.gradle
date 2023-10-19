@@ -31,6 +31,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        viewBinding  true
+        dataBinding  true
+    }
+
 }
 
 dependencies {
@@ -42,6 +48,8 @@ dependencies {
     //viewmodel lifecycle
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle_version")
+
+
 
     //room
     implementation("androidx.room:room-runtime:$room_version")
