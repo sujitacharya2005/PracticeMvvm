@@ -14,12 +14,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.practiceingeneral.car.Car
+import com.example.practiceingeneral.car.CarComponent
+import com.example.practiceingeneral.car.DaggerCarComponent
+import com.example.practiceingeneral.car.DieselEngineModule
 import com.example.practiceingeneral.databinding.ActivityMainBinding
 import com.example.practiceingeneral.room.Note
 import com.example.practiceingeneral.room.NoteAdapter
 import com.example.practiceingeneral.room.NoteViewModel
+import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var car:Car
+
     private lateinit var noteViewModel:NoteViewModel
     private lateinit var noteAdapter: NoteAdapter
     companion object {
@@ -125,6 +135,22 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+        daggerCheck()
+    }
+
+    fun daggerCheck() {
+
+//        val component = DaggerCarComponent.create()
+//        car = component.getCar()
+//        car.drive()
+
+        val component: CarComponent = DaggerCarComponent.builder()
+            .horsePower(100)
+            .engineCapacity(20)
+            .build()
+        //field injection
+        component.inject(this@MainActivity)
+        car.drive()
     }
 
 
