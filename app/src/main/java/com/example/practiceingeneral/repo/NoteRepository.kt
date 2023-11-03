@@ -1,11 +1,14 @@
-package com.example.practiceingeneral.room
+package com.example.practiceingeneral.repo
 
 import android.app.Application
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
+import com.example.practiceingeneral.room.Note
+import com.example.practiceingeneral.room.NoteDao
+import com.example.practiceingeneral.room.NoteDatabase
 
 class NoteRepository(application: Application) {
-    private val noteDao:NoteDao
+    private val noteDao: NoteDao
     private val allNotes: LiveData<List<Note>>
     init {
         val noteDb = NoteDatabase.getDatabase(application)

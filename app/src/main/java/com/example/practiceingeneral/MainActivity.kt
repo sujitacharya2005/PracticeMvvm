@@ -17,11 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.practiceingeneral.car.Car
 import com.example.practiceingeneral.car.CarComponent
 import com.example.practiceingeneral.car.DaggerCarComponent
-import com.example.practiceingeneral.car.DieselEngineModule
 import com.example.practiceingeneral.databinding.ActivityMainBinding
+import com.example.practiceingeneral.di.InjectionHelper
 import com.example.practiceingeneral.room.Note
 import com.example.practiceingeneral.room.NoteAdapter
-import com.example.practiceingeneral.room.NoteViewModel
+import com.example.practiceingeneral.viewmodel.NoteViewModel
+import com.example.practiceingeneral.di.NoteViewModelFactory
 import javax.inject.Inject
 
 
@@ -30,8 +31,11 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var car:Car
 
-    private lateinit var noteViewModel:NoteViewModel
+    private lateinit var noteViewModel: NoteViewModel
     private lateinit var noteAdapter: NoteAdapter
+
+    @Inject
+    lateinit var viewModelFactory: NoteViewModelFactory
     companion object {
         const val ADD_NOTE_REQUEST = 1
         const val EDIT_NOTE_REQUEST = 2
@@ -93,6 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        InjectionHelper.getAppComponent(application).inject(this)
+
         val binding : ActivityMainBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -109,7 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        noteViewModel = ViewModelProvider(this)[NoteViewModel::class.java]
+        noteViewModel = ViewModelProvider(this, viewModelFactory)[NoteViewModel::class.java]
         noteViewModel.getAllNotes().observe(this) {
            // Toast.makeText(this, "onChanged", Toast.LENGTH_SHORT).show()
             noteAdapter.submitList(it as ArrayList<Note>)

@@ -10,7 +10,7 @@ import javax.inject.Named
 interface CarComponent {
 //    fun getCar() : Car
 
-    fun inject(mainActivity: MainActivity)
+   // fun inject(mainActivity: MainActivity)
 
     @Component.Builder
     interface Builder {
@@ -22,4 +22,6 @@ interface CarComponent {
         fun engineCapacity(@Named("engine capacity") engineCapacity: Int): Builder
         fun build() : CarComponent
     }
+    fun inject(mainActivity: MainActivity)
+
 }
